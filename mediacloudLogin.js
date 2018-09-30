@@ -11,7 +11,7 @@
 
 // Your code here...
 (function () {
-    var loginEle = $('#login');
+    let loginEle = $('#login');
     if (loginEle.length) {
         try {
             loginEle.find('input[name="username"]').val('admin@cmstop.com')

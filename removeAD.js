@@ -31,7 +31,7 @@
     let markWords = ['高分', '获奖'];
     let allText = document.querySelectorAll('a, p');
     allText.forEach(aElem => {
-        aElem.innerHTML = textMark(aElem.innerText, markWords);
+        aElem.innerHTML = textMark(aElem.innerHTML, markWords);
     });
 
     function textMark(text, markWords) {

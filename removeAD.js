@@ -39,4 +39,7 @@
         return text;
     }
 
+    // 功能3：去掉搜索框的广告跳转
+    document.querySelector('input[name="keyword"]').addEventListener('keydown', (e) => { e.stopPropagation(); });
+
 })();

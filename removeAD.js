@@ -2,6 +2,7 @@
 // @name         电影天堂去掉广告与高亮高分电影
 // @namespace    https://greasyfork.org/zh-CN/users/226081-yujinpan
 // @version      0.2
+// @license MIT
 // @description  电影天堂网站去掉广告与高亮高分电影
 // @author       yujinpan
 // @require      https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.2/babel.js

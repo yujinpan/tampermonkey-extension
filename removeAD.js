@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         电影天堂去掉广告与高亮高分电影
 // @namespace    https://greasyfork.org/zh-CN/users/226081-yujinpan
-// @version      0.2
+// @version      0.3
 // @license MIT
 // @description  电影天堂网站去掉广告与高亮高分电影
 // @author       yujinpan

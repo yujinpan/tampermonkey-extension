@@ -10,21 +10,88 @@
 // @match        www.dytt8.net/*
 // ==/UserScript==
 
+/**
+ * 已有功能列表：
+ *  - 功能1：删除第一次加载出现的广告
+ *  - 功能2：标记高分电影
+ *  - 功能3：去掉搜索框的广告跳转
+ *  - 功能4：去掉中间页面上的flash广告
+ *  - 功能5：删除右下角的flash广告
+ */
+
 // 功能1：删除第一次加载出现的广告
+// 功能5：删除右下角的flash广告
 (function () {
+    // 生成广告列表实例
+    const ads = new Ads(['link', 'flash']);
+
+    // 循环搜索广告
     let adSearchCounter = 0;
     (function removeAd() {
         adSearchCounter++;
         console.log(`第${adSearchCounter}次查找广告。`);
-        const ad = document.body.children[0];
-        if (ad && ad.nodeName === 'A' && ad.href) {
-            console.log(`找到！成功删除广告！`, ad);
-            return ad.remove();
-        } else if (adSearchCounter > 20) {
+
+        const elems = document.body.children;
+
+        // 查找全屏链接广告
+        const link = elems[0];
+        if (ads.get('link') && link && link.nodeName === 'A' && link.href) {
+            link.remove();
+            ads.remove('link');
+            console.log(`找到全屏链接广告！成功删除！`);
+        }
+
+        // 查找右下角flash窗口
+        const flash = elems[elems.length - 1];
+        if (ads.get('flash') && flash && flash.style.position === 'fixed') {
+            flash.remove();
+            ads.remove('flash');
+            console.log('找到右下角flash窗口！成功删除！');
+        }
+
+        // 判断是否删除完毕
+        if (!ads.get()) return;
+
+
+        // 超过20次就不再查找了
+        if (adSearchCounter > 20) {
             return console.log('未找到，寻找结束！');
         }
+
         setTimeout(removeAd, 300);
     })();
+
+    /**
+     * 广告列表类
+     * @param {Array} ads 广告集合 ['link', 'flash']
+     * @method remove(adName) 移除广告
+     * @method get(adName) 获取广告是否移除，默认无参数返回广告的总数量
+     */
+    function Ads(ads) {
+        let _ads = {};
+        let _adsLen = 0;
+        ads.forEach(ad => {
+            _ads[ad] = true;
+            _adsLen++;
+        });
+
+        return {
+            remove, get
+        }
+
+        // 移除广告
+        function remove(key) {
+            if (_ads[key]) {
+                _ads[key] = false;
+                _adsLen--;
+            }
+        }
+
+        // 获取广告移除状态
+        function get(key) {
+            return key ? _ads[key] : _adsLen;
+        }
+    }
 })();
 
 // 功能2：标记高分电影
@@ -45,7 +112,8 @@
     document.querySelector('input[name="keyword"]').addEventListener('keydown', (e) => { e.stopPropagation(); });
 })();
 
-// 功能4：去掉页面上的flash广告（还可以提高网站性能），不影响页面布局
+// 功能4：去掉中间页面上的flash广告
+// (还可以提高网站性能，不影响页面布局)
 (function () {
     const containWidth = document.querySelector('.contain').clientWidth;
     // 递归移除父级，除与广告的尺寸不一致就停止

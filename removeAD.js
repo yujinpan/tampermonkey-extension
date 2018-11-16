@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         电影天堂(www.dytt8.net)去掉广告与高亮高分电影
 // @namespace    https://github.com/yujinpan/tampermonkey-extension
-// @version      0.3
+// @version      0.4
 // @license      MIT
 // @description  提高电影天堂(www.dytt8.net)网站浏览体验与效率。
 // @author       yujinpan

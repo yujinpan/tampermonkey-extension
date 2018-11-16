@@ -3,7 +3,7 @@
 // @namespace    https://github.com/yujinpan/tampermonkey-extension
 // @version      0.5
 // @license      MIT
-// @description  提高电影天堂(www.dytt8.net)网站浏览体验与效率。
+// @description  主要是在电影天堂(www.dytt8.net)网站去掉页面上的广告（隐藏广告比较烦）。还有就是标记高分和获奖的电影，方便找到精华电影。
 // @author       yujinpan
 // @match        www.dytt8.net/*
 // ==/UserScript==

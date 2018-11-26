@@ -6,6 +6,7 @@
 // @description  主要是在电影天堂(www.dytt8.net)网站去掉页面上的广告（隐藏广告比较烦）。还有就是标记高分和获奖的电影，方便找到精华电影。
 // @author       yujinpan
 // @match        www.dytt8.net/*
+// @match        www.ygdy8.com/*
 // ==/UserScript==
 
 /**

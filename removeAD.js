@@ -7,6 +7,7 @@
 // @author       yujinpan
 // @match        www.dytt8.net/*
 // @match        www.ygdy8.com/*
+// @match        www.dy2018.com/*
 // ==/UserScript==
 
 /**

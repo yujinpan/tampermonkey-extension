@@ -8,6 +8,8 @@
 // @match        www.dytt8.net/*
 // @match        www.ygdy8.com/*
 // @match        www.dy2018.com/*
+// @match        www.xiaopian.com/*
+// @match        www.dygod.net/*
 // ==/UserScript==
 
 /**

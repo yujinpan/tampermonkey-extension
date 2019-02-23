@@ -5,11 +5,11 @@
 // @license      MIT
 // @description  主要是在电影天堂,阳光电影网站去掉页面上的广告（隐藏广告比较烦）。还有就是标记高分和获奖的电影，方便找到精华电影。
 // @author       yujinpan
-// @match        www.dytt8.net/*
-// @match        www.ygdy8.com/*
-// @match        www.dy2018.com/*
-// @match        www.xiaopian.com/*
-// @match        www.dygod.net/*
+// @include      http*://www.dytt8.net/*
+// @include      http*://www.ygdy8.com/*
+// @include      http*://www.dy2018.com/*
+// @include      http*://www.xiaopian.com/*
+// @include      http*://www.dygod.net/*
 // ==/UserScript==
 
 /**

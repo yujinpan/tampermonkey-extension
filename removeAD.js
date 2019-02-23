@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         电影天堂,阳光电影去掉广告与高亮高分电影
 // @namespace    https://github.com/yujinpan/tampermonkey-extension
-// @version      1.0
+// @version      1.0.1
 // @license      MIT
 // @description  主要是在电影天堂,阳光电影网站去掉页面上的广告（隐藏广告比较烦）。还有就是标记高分和获奖的电影，方便找到精华电影。
 // @author       yujinpan

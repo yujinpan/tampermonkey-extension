@@ -116,13 +116,14 @@
 })();
 
 // 功能3：去掉搜索框的广告跳转
-(function() {
-  document
-    .querySelector('input[name="keyword"]')
-    .addEventListener('keydown', function(e) {
-      e.stopPropagation();
-    });
-})();
+// ** 该功能目前与功能6有重合部分，先去掉 **
+// (function() {
+//   document
+//     .querySelector('input[name="keyword"]')
+//     .addEventListener('keydown', function(e) {
+//       e.stopPropagation();
+//     });
+// })();
 
 // 功能4：去掉中间页面上的flash广告
 // (还可以提高网站性能，不影响页面布局)

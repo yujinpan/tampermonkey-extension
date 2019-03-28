@@ -4,6 +4,8 @@
 
 ## 电影天堂系列网站去掉广告与高亮高分电影
 
+![](./images/removeAD-example.png)
+
 ### 主要功能
 
 - 去掉第一次进入点击页面弹出的广告
@@ -51,6 +53,20 @@
 - 去掉页面上的 flash 广告（还可以提高网站性能），不影响页面布局
 - 去掉右下角的 flash 广告
 
+## 新浪股票 API 数据实时展示
+
+![](./images/sina-stock-example.png)
+
+### 主要功能
+
+- 【名】【当前价格】【当前涨幅】实时的展示在浏览器的标签上（嘿嘿）
+- 页面上增加详细的开盘，收盘，最高，最低等价格
+- 页面上增加搜索跳转方便查看其他股票
+
+### 适用站点
+
+- [hq.sinajs.cn](https://hq.sinajs.cn/list=sh000001)
+
 ## 媒体云自动登陆
 
 ### 主要功能
@@ -59,5 +75,3 @@
 - 自动登陆
 
 （如果有其他的需求或者问题，欢迎提出～）
-
-> （另附上阿里云的[代金券](https://promotion.aliyun.com/ntms/yunparter/invite.html?userCode=znftgj11)～):D

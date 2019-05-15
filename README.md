@@ -68,6 +68,28 @@
 
 - [hq.sinajs.cn](https://hq.sinajs.cn/list=sh000001)
 
+## 网站图片（背景图，svg，canvas）抓取预览下载
+
+![](./images/super-image-reptile-1.png)
+![](./images/super-image-reptile-2.png)
+
+### 主要功能
+
+- 抓取页面上的图片链接，包括 **img，背景图，svg，canvas**
+- 提供展示抓取的图片的列表快速预览
+- 提供按钮快速切换抓取的图片展示区
+- 提供快速下载，点击预览即可下载源图片文件
+
+### 适用站点
+
+- 所有站点
+
+### 更新记录
+
+2019/5/16 新增：
+
+- v1.0 版本
+
 ## 媒体云自动登陆
 
 ### 主要功能

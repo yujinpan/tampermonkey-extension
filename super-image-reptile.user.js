@@ -121,7 +121,7 @@ function showImageList() {
   // content
   let imageList = '';
   urls.forEach((url) => {
-    imageList += `<li><img alt="加载中" src='${url}'</li>`;
+    imageList += `<li><img src='${url}'</li>`;
   });
   svgs.forEach((svg) => {
     imageList += `<li>${svg}</li>`;

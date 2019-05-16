@@ -68,6 +68,10 @@ function showImageList() {
         right: 0;
         bottom: 0;
         z-index: 9999;
+        opacity: 0.5;
+    }
+    .SIR-toggle-button:hover {
+      opacity: 1;
     }
     .SIR-main {
         position: fixed;

@@ -8,7 +8,7 @@
 // @include      http*://**
 // ==/UserScript==
 
-// 过滤
+// 抓取的图片
 const urls = [];
 const svgs = [];
 const canvas = [];
@@ -53,21 +53,21 @@ function showImageList() {
   // style
   const style = document.createElement('style');
   style.innerHTML = `
-    #SIR {
-        position: fixed;
-        z-index: 9999;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        overflow-y: auto;
-    }
     .SIR-toggle-button {
         position: fixed;
         right: 0;
         bottom: 0;
+        z-index: 9999;
     }
     .SIR-main {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 9998;
+        overflow-y: auto;
+        margin: 0;
         padding: 0;
         list-style-type: none;
         display: none;
@@ -121,7 +121,7 @@ function showImageList() {
   });
   section.innerHTML = `
     <button class="SIR-toggle-button">自动获取图片</button>
-    <ul class="SIR-main">
+    <ul title="点击下载" class="SIR-main">
         ${imageList}
     </ul>
   `;

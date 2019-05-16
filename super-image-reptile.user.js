@@ -8,10 +8,18 @@
 // @include      http*://**
 // ==/UserScript==
 
+/**
+ * 已有功能列表：
+ * - 抓取页面上的图片链接，包括 **img，背景图，svg，canvas**
+ * - 提供展示抓取的图片的列表快速预览
+ * - 提供按钮快速切换抓取的图片展示区
+ * - 提供快速下载，点击预览即可下载源图片文件
+ */
+
 // 抓取的图片
-const urls = [];
-const svgs = [];
-const canvas = [];
+const urls = new Set();
+const svgs = new Set();
+const canvas = new Set();
 
 imagesReptile();
 showImageList();
@@ -26,24 +34,26 @@ function imagesReptile() {
 
     // img 标签
     if (tagName === 'IMG') {
-      urls.push(element.src);
+      urls.add(getImgUrl(element));
+      continue;
+    }
+
+    // svg
+    if (tagName === 'SVG') {
+      svgs.add(element);
+      continue;
+    }
+
+    // canvas
+    if (tagName === 'CANVAS') {
+      canvas.add(element);
       continue;
     }
 
     // background-image
     const backgroundImage = getComputedStyle(element).backgroundImage;
     if (backgroundImage !== 'none' && backgroundImage.startsWith('url')) {
-      urls.push(backgroundImage.slice(5, -2));
-    }
-
-    // svg
-    if (tagName === 'SVG') {
-      svgs.push(element);
-    }
-
-    // canvas
-    if (tagName === 'CANVAS') {
-      canvas.push(element);
+      urls.add(backgroundImage.slice(5, -2));
     }
   }
 }
@@ -111,7 +121,7 @@ function showImageList() {
   // content
   let imageList = '';
   urls.forEach((url) => {
-    imageList += `<li><img src='${url}'</li>`;
+    imageList += `<li><img alt="加载中" src='${url}'</li>`;
   });
   svgs.forEach((svg) => {
     imageList += `<li>${svg}</li>`;
@@ -185,4 +195,22 @@ function downloadSvg(svg) {
 // 为 canvas 生成下载链接
 function downloadCanvas(canvas) {
   downloadUrl(canvas.toDataURL());
+}
+
+// 获 img 的链接
+function getImgUrl(element) {
+  let url;
+
+  // 兼容 srcset 属性
+  if (element.srcset) {
+    const srcs = element.srcset.split(',');
+    url = srcs.reduce((pre, curr) => {
+      curr = curr.trim();
+      return curr.includes(' ') ? curr.split(' ')[0] : curr;
+    }, '');
+  } else {
+    url = element.src;
+  }
+
+  return url;
 }

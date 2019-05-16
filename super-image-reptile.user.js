@@ -14,6 +14,7 @@
  * - 提供展示抓取的图片的列表快速预览
  * - 提供按钮快速切换抓取的图片展示区
  * - 提供快速下载，点击预览即可下载源图片文件
+ * - 提供动态抓取后来加载的图片
  */
 
 // 抓取的图片
@@ -21,7 +22,6 @@ const urls = new Set();
 const svgs = new Set();
 const canvas = new Set();
 
-imagesReptile();
 showImageList();
 
 // 获取资源列表
@@ -117,22 +117,9 @@ function showImageList() {
   // container
   const section = document.createElement('section');
   section.id = 'SIR';
-
-  // content
-  let imageList = '';
-  urls.forEach((url) => {
-    imageList += `<li><img src='${url}'</li>`;
-  });
-  svgs.forEach((svg) => {
-    imageList += `<li>${svg}</li>`;
-  });
-  canvas.forEach((canvas) => {
-    imageList += `<li>${canvas}</li>`;
-  });
   section.innerHTML = `
     <button class="SIR-toggle-button">自动获取图片</button>
     <ul title="点击下载" class="SIR-main">
-        ${imageList}
     </ul>
   `;
 
@@ -141,12 +128,32 @@ function showImageList() {
 
   const button = section.querySelector('.SIR-toggle-button');
   const main = section.querySelector('.SIR-main');
-  let showMain = false;
 
+  // 切换时进行抓取
+  let showMain = false;
   button.onclick = () => {
     showMain = !showMain;
+    if (showMain) {
+      imagesReptile();
+      // content
+      let imageList = '';
+      urls.forEach((url) => {
+        imageList += `<li><img src='${url}'</li>`;
+      });
+      svgs.forEach((svg) => {
+        imageList += `<li>${svg}</li>`;
+      });
+      canvas.forEach((canvas) => {
+        imageList += `<li>${canvas}</li>`;
+      });
+      main.innerHTML = imageList;
+    } else {
+      main.innerHTML = '';
+    }
     main.style.display = showMain ? 'flex' : 'none';
   };
+
+  // 点击事件委托给父级
   main.onclick = (e) => {
     let target = e.target;
     if (target.tagName === 'LI') {

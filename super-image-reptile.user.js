@@ -30,22 +30,22 @@ function imagesReptile() {
 
   // 遍历取出 img，backgroundImage，svg，canvas
   for (const element of elements) {
-    const tagName = element.tagName;
+    const tagName = element.tagName.toLowerCase();
 
     // img 标签
-    if (tagName === 'IMG') {
+    if (tagName === 'img') {
       urls.add(getImgUrl(element));
       continue;
     }
 
     // svg
-    if (tagName === 'SVG') {
+    if (tagName === 'svg') {
       svgs.add(element);
       continue;
     }
 
     // canvas
-    if (tagName === 'CANVAS') {
+    if (tagName === 'canvas') {
       canvas.add(element);
       continue;
     }

@@ -193,7 +193,12 @@
     svg.setAttribute('version', 1.1);
     svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
 
-    return 'data:image/svg+xml;base64,' + btoa(svg.outerHTML);
+    try {
+      return 'data:image/svg+xml;base64,' + btoa(svg.outerHTML);
+    } catch (e) {
+      console.log('svg创建失败');
+      return '';
+    }
   }
 
   /**

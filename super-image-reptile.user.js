@@ -15,7 +15,7 @@
  * - 提供按钮快速切换抓取的图片展示区
  * - 提供快速下载，点击预览即可下载源图片文件
  * - 提供动态抓取后来加载的图片
- * 
+ *
  * 2019-5-17 更新内容：
  * - 修复 svg，canvas 展示与下载问题
  * - 增加暗黑透明样式，黑色，白色图片区分明显
@@ -41,6 +41,7 @@
     section.id = 'SIR';
     section.innerHTML = `
       <button class="SIR-toggle-button">自动获取图片</button>
+      <div class="SIR-cover"></div>
       <ul class="SIR-main">
       </ul>
     `;
@@ -70,7 +71,7 @@
       } else {
         main.innerHTML = '';
       }
-      main.style.display = showMain ? 'flex' : 'none';
+      section.classList.toggle('active', showMain);
     };
   }
 
@@ -116,6 +117,12 @@
   function createStyle() {
     const style = document.createElement('style');
     style.innerHTML = `
+      #SIR.active .SIR-cover {
+          display: block;
+      }
+      #SIR.active .SIR-main {
+          display: flex;
+      }
       .SIR-toggle-button {
           position: fixed;
           right: 0;
@@ -124,28 +131,35 @@
           opacity: 0.5;
       }
       .SIR-toggle-button:hover {
-        opacity: 1;
+          opacity: 1;
       }
+      .SIR-cover,
       .SIR-main {
+          display: none;
           position: fixed;
           width: 100%;
           height: 100%;
           top: 0;
           left: 0;
+      }
+      .SIR-cover {
+          z-index: 99997;
+          background: rgba(255, 255, 255, 0.7);
+      }
+      .SIR-main {
           z-index: 99998;
           overflow-y: auto;
           margin: 0;
           padding: 0;
           list-style-type: none;
-          display: none;
           flex-wrap: wrap;
           text-align: center;
-          min-height: 100%;
-          background: rgba(0, 0, 0, 0.8);
+          background: rgba(0, 0, 0, 0.7);
       }
       .SIR-main > li {
           box-sizing: border-box;
           width: 10%;
+          min-width: 168px;
           min-height: 100px;
           max-height: 200px;
           padding: 1px;
@@ -176,19 +190,10 @@
    * @param {Elment} svg svg 元素
    */
   function getSvgImage(svg) {
-    const image = new Image();
-    image.src =
-      'data:image/svg+xml;base64,' +
-      window.btoa(unescape(encodeURIComponent(svg.outerHTML)));
-
-    const canvas = document.createElement('canvas');
-    canvas.width = svg.clientWidth;
-    canvas.height = svg.clientHeight;
-
-    const context = canvas.getContext('2d');
-    context.drawImage(image, 0, 0);
-
-    return getCanvasImage(canvas);
+    const svgBlob = new Blob([svg.outerHTML], {
+      type: 'image/svg+xml;charset=utf-8'
+    });
+    return URL.createObjectURL(svgBlob);
   }
 
   /**

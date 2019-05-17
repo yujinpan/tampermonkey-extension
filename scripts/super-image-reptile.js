@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         网站图片（背景图，svg，canvas）抓取预览下载
 // @namespace    https://github.com/yujinpan/tampermonkey-extension
-// @version      2.0
+// @version      2.1
 // @license      MIT
 // @description  将站点所有的图片（背景图，svg，canvas）抓取提供预览，直接点击下载。
 // @author       yujinpan
@@ -130,6 +130,7 @@
           bottom: 0;
           z-index: 99999;
           opacity: 0.5;
+          background: white;
       }
       .SIR-toggle-button:hover {
           opacity: 1;

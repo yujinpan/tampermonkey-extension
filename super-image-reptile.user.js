@@ -190,10 +190,10 @@
    * @param {Elment} svg svg 元素
    */
   function getSvgImage(svg) {
-    const svgBlob = new Blob([svg.outerHTML], {
-      type: 'image/svg+xml;charset=utf-8'
-    });
-    return URL.createObjectURL(svgBlob);
+    svg.setAttribute('version', 1.1);
+    svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+
+    return 'data:image/svg+xml;base64,' + btoa(svg.outerHTML);
   }
 
   /**

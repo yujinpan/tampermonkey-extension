@@ -3,7 +3,7 @@
 // @namespace    https://github.com/yujinpan/tampermonkey-extension
 // @version      2.2
 // @license      MIT
-// @description  将站点所有的图片（背景图，svg，canvas）抓取提供预览，直接点击下载。
+// @description  将站点所有的图片（背景图，svg，canvas）抓取提供预览，直接点击下载，批量打包下载。
 // @author       yujinpan
 // @include      http*://**
 // @require      https://cdn.bootcss.com/jszip/3.2.2/jszip.min.js

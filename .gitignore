@@ -1,4 +1,5 @@
 # editor
 .vscode
+.idea
 
 .DS_Store

@@ -296,7 +296,7 @@
       // blob 类型可能被 revoke，这里生成 canvas
       if (url.startsWith('blob')) {
         const canvas = createCanvasWithImg(element);
-        return getCanvasImage(canvas);
+        url = getCanvasImage(canvas);
       }
     }
 
@@ -309,7 +309,6 @@
    */
   function createCanvasWithImg(imgElem) {
     const canvas = document.createElement('canvas');
-    debugger
     canvas.width = imgElem.naturalWidth || imgElem.width;
     canvas.height = imgElem.naturalHeight || imgElem.height;
     const ctx = canvas.getContext('2d');

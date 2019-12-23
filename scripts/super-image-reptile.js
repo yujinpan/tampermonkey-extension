@@ -17,6 +17,10 @@
  * - 提供快速下载，点击预览即可下载源图片文件
  * - 提供动态抓取后来加载的图片
  *
+ * 2019-12-23
+ * - 修复 blob 类型的图片展示与下载失败问题
+ * - 优化性能，解决多图的卡顿问题
+ *
  * 2019-11-17 更新内容：
  * - **新增【批量下载功能】一键打包下载全部图片**
  *
@@ -30,6 +34,7 @@
 (() => {
   // 存放抓取与生成的图片
   const urls = new Set();
+  let timeId;
 
   // 初始化
   init();
@@ -67,21 +72,14 @@
     let showMain = false;
     button.onclick = () => {
       showMain = !showMain;
+      main.innerHTML = '';
+      urls.clear();
       if (showMain) {
-        imagesReptile();
-        // content
-        let imageList = '';
-        urls.forEach((url) => {
-          imageList += `
-            <li>
-              <a download="image" title="点击下载" href="${url}">
-                <img src='${url}' />
-              </a>
-            </li>`;
+        imagesReptile(url => {
+          main.appendChild(addListItem(url));
         });
-        main.innerHTML = imageList;
       } else {
-        main.innerHTML = '';
+        clearTimeout(timeId);
       }
       section.classList.toggle('active', showMain);
     };
@@ -89,16 +87,41 @@
   }
 
   /**
-   * 获取资源列表
+   * 添加图片列表项
+   * @param {String} url
+   * @return {HTMLLIElement}
    */
-  function imagesReptile() {
+  function addListItem(url) {
+    urls.add(url);
+
+    let li, a, img;
+    li = document.createElement('li');
+    a = document.createElement('a');
+    img = document.createElement('img');
+
+    a.download = 'image';
+    a.title = '点击下载';
+    a.href = url;
+    img.src = url;
+
+    a.appendChild(img);
+    li.appendChild(a);
+
+    return li;
+  }
+
+  /**
+   * 获取资源列表
+   * @param {Function} callback 参数为 url 值
+   */
+  function imagesReptile(callback) {
     const elements = Array.from(document.querySelectorAll('*'));
 
-    let url;
+    let url, index = 0, element, len = elements.length, tagName;
     // 遍历取出 img，backgroundImage，svg，canvas
-    for (const element of elements) {
-      const tagName = element.tagName.toLowerCase();
-
+    (function each() {
+      element = elements[index];
+      tagName = element.tagName.toLowerCase();
       url = '';
 
       // img 标签
@@ -108,38 +131,38 @@
         } catch (e) {
           warnMessage(e);
         }
-        url && urls.add(url);
-        continue;
       }
-
       // svg
-      if (tagName === 'svg') {
+      else if (tagName === 'svg') {
         try {
           url = getSvgImage(element);
         } catch (e) {
           warnMessage(e);
         }
-        url && urls.add(url);
-        continue;
       }
-
       // canvas
-      if (tagName === 'canvas') {
+      else if (tagName === 'canvas') {
         try {
           url = getCanvasImage(element);
         } catch (e) {
           warnMessage(e);
         }
-        url && urls.add(url);
-        continue;
+      }
+      // background-image
+      else {
+        const backgroundImage = getComputedStyle(element).backgroundImage;
+        if (backgroundImage !== 'none' && backgroundImage.startsWith('url')) {
+          url = backgroundImage.slice(5, -2);
+        }
       }
 
-      // background-image
-      const backgroundImage = getComputedStyle(element).backgroundImage;
-      if (backgroundImage !== 'none' && backgroundImage.startsWith('url')) {
-        urls.add(backgroundImage.slice(5, -2));
+      url && callback(url);
+
+      if (++index < len) {
+        // 延迟计算（解决卡顿问题）
+        timeId = setTimeout(() => each(), 20);
       }
-    }
+    })();
   }
 
   /**
@@ -205,8 +228,8 @@
           min-width: 168px;
           min-height: 100px;
           max-height: 200px;
-          padding: 1px;
-          box-shadow: 0 0 1px white;
+          border: 2px solid transparent;
+          box-shadow: 0 0 1px 1px white;
           background: rgba(0, 0, 0, 0.5);
           overflow: hidden;
       }
@@ -256,7 +279,7 @@
    * @param {Element} svg svg 元素
    */
   function getSvgImage(svg) {
-    svg.setAttribute('version', 1.1);
+    svg.setAttribute('version', '1.1');
     svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
 
     try {
@@ -312,7 +335,7 @@
     canvas.width = imgElem.naturalWidth || imgElem.width;
     canvas.height = imgElem.naturalHeight || imgElem.height;
     const ctx = canvas.getContext('2d');
-    ctx.drawImage(imgElem,0,0);
+    ctx.drawImage(imgElem, 0, 0);
     return canvas;
   }
 

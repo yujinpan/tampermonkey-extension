@@ -269,7 +269,7 @@
 
   /**
    * 获取 canvas 图片链接
-   * @param {Element} canvas canvas 元素
+   * @param {HTMLCanvasElement} canvas canvas 元素
    */
   function getCanvasImage(canvas) {
     return canvas.toDataURL();
@@ -279,7 +279,7 @@
    * 获取 img 的链接
    * @description
    * 兼容 srcset 属性
-   * @param {Element} element 图片元素
+   * @param {HTMLImageElement} element 图片元素
    */
   function getImgUrl(element) {
     let url;
@@ -293,9 +293,28 @@
       }, '');
     } else {
       url = element.src;
+      // blob 类型可能被 revoke，这里生成 canvas
+      if (url.startsWith('blob')) {
+        const canvas = createCanvasWithImg(element);
+        return getCanvasImage(canvas);
+      }
     }
 
     return url;
+  }
+
+  /**
+   * 创建 img 元素的 canvas
+   * @param {HTMLImageElement} imgElem
+   */
+  function createCanvasWithImg(imgElem) {
+    const canvas = document.createElement('canvas');
+    debugger
+    canvas.width = imgElem.naturalWidth || imgElem.width;
+    canvas.height = imgElem.naturalHeight || imgElem.height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(imgElem,0,0);
+    return canvas;
   }
 
   /**

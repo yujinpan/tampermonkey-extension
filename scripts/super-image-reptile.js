@@ -160,7 +160,7 @@
 
       if (++index < len) {
         // 延迟计算（解决卡顿问题）
-        timeId = setTimeout(() => each(), 20);
+        timeId = setTimeout(() => each(), 0);
       }
     })();
   }

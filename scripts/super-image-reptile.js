@@ -306,7 +306,7 @@
   function getImg(url) {
     return new Promise((resolve) => {
       // 如果是链接，就先加载图片，再存文件
-      if (/((\.(png|jpg|jpeg|gif|svg)$)|^(http|\/|file))/.test(url)) {
+      if (/((\.(png|jpg|jpeg|gif|svg)$)|^(http|\/|file|blob))/.test(url)) {
         const request = new XMLHttpRequest();
         request.open('GET', url, true);
         request.responseType = 'blob';

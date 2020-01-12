@@ -17,6 +17,9 @@
  * - 提供快速下载，点击预览即可下载源图片文件
  * - 提供动态抓取后来加载的图片
  *
+ * 2020-1-12
+ * - 修复会出现重复的情况
+ *
  * 2019-12-23
  * - 修复 blob 类型的图片展示与下载失败问题
  * - 优化性能，解决多图的卡顿问题
@@ -34,6 +37,7 @@
 (() => {
   // 存放抓取与生成的图片
   const urls = new Set();
+  const blobUrls = new Set();
   let timeId;
 
   // 初始化
@@ -74,9 +78,10 @@
       showMain = !showMain;
       main.innerHTML = '';
       urls.clear();
+      blobUrls.clear();
       if (showMain) {
         imagesReptile(url => {
-          main.appendChild(addListItem(url));
+          !urls.has(url) && main.appendChild(addListItem(url));
         });
       } else {
         clearTimeout(timeId);
@@ -317,7 +322,8 @@
     } else {
       url = element.src;
       // blob 类型可能被 revoke，这里生成 canvas
-      if (url.startsWith('blob')) {
+      if (!blobUrls.has(url) && url.startsWith('blob')) {
+        blobUrls.add(url); // 存储源地址用于判断是否已经生成，因为生成的已经转换了
         const canvas = createCanvasWithImg(element);
         url = getCanvasImage(canvas);
       }

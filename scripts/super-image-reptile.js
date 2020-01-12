@@ -18,6 +18,7 @@
  * - 提供动态抓取后来加载的图片
  *
  * 2020-1-12
+ * - 新增【图片尺寸过滤】功能
  * - 修复会出现重复的情况
  *
  * 2019-12-23
@@ -60,6 +61,13 @@
           <ul class="SIR-main">
           </ul>
           <div class="SIR-tools">
+            <select class="SIR-filter-mini-button SIR-button">
+              <option value ="0">不进行过滤</option>
+              <option value ="50">宽高大于 50</option>
+              <option value ="100">宽高大于 100</option>
+              <option value="150">宽高大于 150</option>
+              <option value="200">宽高大于 200</option>
+            </select>
             <button class="SIR-download-bat-button SIR-button">批量下载</button>
           </div>
           <div class="SIR-download-program"></div>
@@ -71,24 +79,37 @@
     const button = section.querySelector('.SIR-toggle-button');
     const main = section.querySelector('.SIR-main');
     const downloadBat = section.querySelector('.SIR-download-bat-button');
+    const filterMini = section.querySelector('.SIR-filter-mini-button');
 
     // 切换时进行抓取
     let showMain = false;
-    button.onclick = () => {
-      showMain = !showMain;
+
+    const reset = () => {
       main.innerHTML = '';
       urls.clear();
       blobUrls.clear();
+      clearTimeout(timeId);
+    };
+
+    const initImages = () => {
+      imagesReptile(url => {
+        !urls.has(url) && main.appendChild(addListItem(url));
+      });
+    };
+
+    button.onclick = () => {
+      showMain = !showMain;
+      reset();
       if (showMain) {
-        imagesReptile(url => {
-          !urls.has(url) && main.appendChild(addListItem(url));
-        });
-      } else {
-        clearTimeout(timeId);
+        initImages();
       }
       section.classList.toggle('active', showMain);
     };
     downloadBat.onclick = downloadAll;
+    filterMini.onchange = () => {
+      reset();
+      initImages();
+    };
   }
 
   /**
@@ -121,51 +142,66 @@
    */
   function imagesReptile(callback) {
     const elements = Array.from(document.querySelectorAll('*'));
+    const elem = document.querySelector('.SIR-download-program');
+    elem.classList.add('active');
+    elem.innerHTML = getProgramHTML(0, elements.length);
 
-    let url, index = 0, element, len = elements.length, tagName;
+    let url, index = 0, element, len = elements.length, tagName,
+      filterMiniSize = +document.querySelector('.SIR-filter-mini-button').value;
     // 遍历取出 img，backgroundImage，svg，canvas
     (function each() {
       element = elements[index];
-      tagName = element.tagName.toLowerCase();
-      url = '';
 
-      // img 标签
-      if (tagName === 'img') {
-        try {
-          url = getImgUrl(element);
-        } catch (e) {
-          warnMessage(e);
+      // 过滤小图尺寸
+      if (
+        (filterMiniSize && element.clientWidth > filterMiniSize && element.clientHeight > filterMiniSize) ||
+        !filterMiniSize
+      ) {
+        tagName = element.tagName.toLowerCase();
+        url = '';
+
+        // img 标签
+        if (tagName === 'img') {
+          try {
+            url = getImgUrl(element);
+          } catch (e) {
+            warnMessage(e);
+          }
         }
-      }
-      // svg
-      else if (tagName === 'svg') {
-        try {
-          url = getSvgImage(element);
-        } catch (e) {
-          warnMessage(e);
+        // svg
+        else if (tagName === 'svg') {
+          try {
+            url = getSvgImage(element);
+          } catch (e) {
+            warnMessage(e);
+          }
         }
-      }
-      // canvas
-      else if (tagName === 'canvas') {
-        try {
-          url = getCanvasImage(element);
-        } catch (e) {
-          warnMessage(e);
+        // canvas
+        else if (tagName === 'canvas') {
+          try {
+            url = getCanvasImage(element);
+          } catch (e) {
+            warnMessage(e);
+          }
         }
-      }
-      // background-image
-      else {
-        const backgroundImage = getComputedStyle(element).backgroundImage;
-        if (backgroundImage !== 'none' && backgroundImage.startsWith('url')) {
-          url = backgroundImage.slice(5, -2);
+        // background-image
+        else {
+          const backgroundImage = getComputedStyle(element).backgroundImage;
+          if (backgroundImage !== 'none' && backgroundImage.startsWith('url')) {
+            url = backgroundImage.slice(5, -2);
+          }
         }
       }
 
       url && callback(url);
 
+      elem.innerHTML = getProgramHTML(index + 1, elements.length);
+
       if (++index < len) {
         // 延迟计算（解决卡顿问题）
         timeId = setTimeout(() => each(), 0);
+      } else {
+        elem.classList.remove('active');
       }
     })();
   }
@@ -188,7 +224,12 @@
           display: block;
       }
       #SIR .SIR-button {
-          padding: 1px 3px;
+          visibility: visible;
+          display: inline-block;
+          height: 22px;
+          line-height: 22px;
+          margin-right: 10px;
+          padding: 0 3px;
           opacity: 0.5;
           background: white;
           font-size: 13px;
@@ -256,9 +297,10 @@
           position: fixed;
           bottom: 0;
           right: 100px;
+          display: flex;
       }
       #SIR .SIR-download-program {
-          position: absolute;
+          position: fixed;
           top: 0;
           left: 0;
           width: 100%;

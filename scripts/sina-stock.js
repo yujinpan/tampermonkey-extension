@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         新浪股票 API 数据实时展示
 // @namespace    https://github.com/yujinpan/tampermonkey-extension
-// @version      1.0
+// @version      1.1
 // @license      MIT
 // @description  将新浪股票接口的数据直接实时展示在浏览器的标签与页面上。
 // @author       yujinpan
@@ -21,24 +21,25 @@ class App {
   // 获取数据
   getData() {
     return fetch(`/list=${this.code}`)
-      .then((res) => res.blob())
-      .then((blob) => {
-        return new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onload = function() {
-            resolve(reader.result);
-          };
-          reader.readAsText(blob, 'GBK');
-        });
+    .then((res) => res.blob())
+    .then((blob) => {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = function () {
+          resolve(reader.result);
+        };
+        reader.readAsText(blob, 'GBK');
       });
+    });
   }
+
   // 格式化数据
   formatData(resultData) {
     try {
       const arr = resultData
-        .match(/".*"/)[0]
-        .replace(/"/g, '')
-        .split(',');
+      .match(/".*"/)[0]
+      .replace(/"/g, '')
+      .split(',');
       const reduce = arr[3] - arr[2];
       const percent = ((reduce / arr[2]) * 100).toFixed(2);
       this.data = {
@@ -57,12 +58,14 @@ class App {
       console.log(e);
     }
   }
+
   // 设置title
   setTitle() {
     document.title = `${this.data.name} ${this.data.current} ${
       this.data.percent
     }%`;
   }
+
   // 渲染table
   renderTable() {
     const params = this.data;
@@ -105,17 +108,21 @@ class App {
             </tr>
         </tbody>
         </table>
+        <hr style="margin-top: 30px;" />
+        <div><img width="600px" src="${this.getMinImageUrl()}" /></div>
+        <div><img width="600px" src="${this.getDayKImageUrl()}" /></div>
     `;
   }
+
   // 创建搜索
   renderSearch() {
     const searchHistoryElem = this.getSearchHistory()
-      .map((item) => {
-        return `<li><a href="/list=${item.code}">${item.name}（${
-          item.code
-        }）</a></li>`;
-      })
-      .join('');
+    .map((item) => {
+      return `<li><a href="/list=${item.code}">${item.name}（${
+        item.code
+      }）</a></li>`;
+    })
+    .join('');
     const elem = `
         <h5>搜索股票</h5>
         <input id="search" autocomplete="false" style="width: 180px;" placeholder="输入股票代码，例如 sh000001" />
@@ -148,10 +155,12 @@ class App {
     });
     document.body.appendChild(searchWrap);
   }
+
   // 跳转
   targetTo(code) {
     location.href = `/list=${code}`;
   }
+
   // 获取搜索历史
   getSearchHistory() {
     const history = localStorage.getItem('history');
@@ -161,6 +170,7 @@ class App {
       return [];
     }
   }
+
   // 存储搜索历史
   setSearchHistory(code, name) {
     const history = this.getSearchHistory();
@@ -168,8 +178,18 @@ class App {
     if (index !== -1) {
       history.splice(index, 1);
     }
-    history.unshift({ code, name });
+    history.unshift({code, name});
     localStorage.setItem('history', JSON.stringify(history));
+  }
+
+  // 获取分时图
+  getMinImageUrl() {
+    return `http://image.sinajs.cn/newchart/min/n/${this.code}.gif?v=${Date.now()}`;
+  }
+
+  // 获取分时图
+  getDayKImageUrl() {
+    return `http://image.sinajs.cn/newchart/daily/n/${this.code}.gif?v=${Date.now()}`;
   }
 
   // 开始
@@ -183,6 +203,7 @@ class App {
           return Promise.resolve(true);
         } else {
           alert('代码错误！');
+          this.stop();
           return Promise.resolve(false);
         }
       });
@@ -195,7 +216,6 @@ class App {
       `;
     handle().then((res) => {
       this.renderSearch();
-      debugger;
       if (res) {
         this.setSearchHistory(
           location.pathname.replace('/list=', ''),
@@ -204,6 +224,7 @@ class App {
       }
     });
   }
+
   // 停止
   stop() {
     clearInterval(this.intervalId);
@@ -211,8 +232,8 @@ class App {
 }
 
 // 初始化
-(function() {
+(function () {
   const code = location.pathname.replace('/list=', '');
-  const app = new App(code || sh000001);
+  const app = new App(code || 'sh000001');
   app.start();
 })();

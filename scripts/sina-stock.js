@@ -109,8 +109,8 @@ class App {
         </tbody>
         </table>
         <hr style="margin-top: 30px;" />
-        <div><img width="600px" src="${this.getMinImageUrl()}" /></div>
-        <div><img width="600px" src="${this.getDayKImageUrl()}" /></div>
+        <div><img width="600px" height="330px" src="${this.getMinImageUrl()}" /></div>
+        <div><img width="600px" height="330px" src="${this.getDayKImageUrl()}" /></div>
     `;
   }
 

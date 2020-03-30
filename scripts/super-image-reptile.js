@@ -146,7 +146,17 @@
    * @param {Function} callback 参数为 url 值
    */
   function imagesReptile(callback) {
-    const elements = Array.from(document.querySelectorAll('*'));
+    const elements = Array.from(document.querySelectorAll(`
+      *
+      :not(head)
+      :not(script)
+      :not(textarea)
+      :not(input)
+      :not(meta)
+      :not(title)
+      :not(style)
+      :not(link)
+    `));
     const elem = document.querySelector('.SIR-download-program');
     elem.classList.add('active');
     elem.innerHTML = getProgramHTML(0, elements.length);

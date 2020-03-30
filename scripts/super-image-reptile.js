@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         网站图片（背景图，svg，canvas）抓取预览下载
 // @namespace    https://github.com/yujinpan/tampermonkey-extension
-// @version      2.4
+// @version      2.5
 // @license      MIT
 // @description  将站点所有的图片（背景图，svg，canvas）抓取提供预览，直接点击下载，批量打包下载。
 // @author       yujinpan

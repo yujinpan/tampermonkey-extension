@@ -106,7 +106,12 @@
       section.classList.toggle('active', showMain);
     };
     downloadBat.onclick = downloadAll;
-    filterMini.onchange = () => {
+
+    // filter
+    const filter = localStorage.getItem('SIR_FILTER');
+    filter && (filterMini.value = filter);
+    filterMini.onchange = (e) => {
+      localStorage.setItem('SIR_FILTER', e.target.value);
       reset();
       initImages();
     };

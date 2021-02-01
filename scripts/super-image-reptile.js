@@ -218,7 +218,12 @@
 
       if (++index < len) {
         // 延迟计算（解决卡顿问题）
-        timeId = setTimeout(() => each(), 0);
+        // 每进行 50 次计算就休息一次
+        if (Number.isInteger(index / 50)) {
+          timeId = setTimeout(() => each(), 0);
+        } else {
+          each();
+        }
       } else {
         elem.classList.remove('active');
       }

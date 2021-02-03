@@ -380,11 +380,8 @@
 
     // 兼容 srcset 属性
     if (element.srcset) {
-      const srcs = element.srcset.split(',');
-      url = srcs.reduce((pre, curr) => {
-        curr = curr.trim();
-        return curr.includes(' ') ? curr.split(' ')[0] : curr;
-      }, '');
+      const srcs = element.srcset.split(' ');
+      url = srcs[0];
     } else {
       url = element.src;
       // blob 类型可能被 revoke，这里生成 canvas

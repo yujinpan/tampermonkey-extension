@@ -151,15 +151,7 @@
    */
   function imagesReptile(callback) {
     const elements = Array.from(document.querySelectorAll(`
-      *
-      :not(head)
-      :not(script)
-      :not(textarea)
-      :not(input)
-      :not(meta)
-      :not(title)
-      :not(style)
-      :not(link)
+      *:not(head):not(script):not(textarea):not(input):not(meta):not(title):not(style):not(link)
     `));
     const elem = document.querySelector('.SIR-download-program');
     elem.classList.add('active');

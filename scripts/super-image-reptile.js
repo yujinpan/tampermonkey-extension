@@ -143,6 +143,7 @@
     a = document.createElement('a');
     img = document.createElement('img');
 
+    a.target = '_blank';
     a.download = 'image';
     a.title = '点击下载';
     a.href = url;

@@ -55,7 +55,7 @@
   advance();
 
   // 初始化
-  init();
+  document.addEventListener('DOMContentLoaded', init);
 
   /**
    * 初始化
@@ -531,8 +531,8 @@
     const canvasContextPrototype = CanvasRenderingContext2D.prototype;
     canvasContextPrototype.drawImage_ = CanvasRenderingContext2D.prototype.drawImage;
     canvasContextPrototype.drawImage = function () {
-      const src = arguments[0].src;
-      if (src.startsWith('http') && location.origin !== src.slice(0, src.indexOf('/', 8)) && src.crossOrigin === undefined) {
+      const { src, crossOrigin } = arguments[0];
+      if (src.startsWith('http') && location.origin !== src.slice(0, src.indexOf('/', 8)) && !crossOrigin) {
         console.log('%c 【自动获取图片】站点正在加载无法下载的图片，请自行访问该链接下载：', 'color: orange;', src);
         return;
       }

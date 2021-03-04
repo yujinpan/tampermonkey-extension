@@ -7,6 +7,7 @@
 // @author       yujinpan
 // @include      http*://**
 // @require      https://cdn.bootcss.com/jszip/3.2.2/jszip.min.js
+// @run-at       document-start
 // ==/UserScript==
 
 /**
@@ -44,6 +45,9 @@
   const urls = new Set();
   const blobUrls = new Set();
   let timeId;
+
+  // 开启高级模式
+  advance();
 
   // 初始化
   init();
@@ -358,7 +362,7 @@
    * @param {HTMLCanvasElement} canvas canvas 元素
    */
   function getCanvasImage(canvas) {
-    return canvas.toDataURL();
+    return canvas.toDataURL_();
   }
 
   /**
@@ -512,5 +516,22 @@
    */
   function warnMessage(...params) {
     console.warn('[自动获取图片]:', ...params);
+  }
+
+  function advance() {
+    // `toDataURL` was broke
+    HTMLCanvasElement.prototype.toDataURL_ = HTMLCanvasElement.prototype.toDataURL;
+
+    // remove tainted source
+    const canvasContextPrototype = CanvasRenderingContext2D.prototype;
+    canvasContextPrototype.drawImage_ = CanvasRenderingContext2D.prototype.drawImage;
+    canvasContextPrototype.drawImage = function () {
+      const src = arguments[0].src;
+      if (src.startsWith('http') && location.origin !== src.slice(0, src.indexOf('/', 8)) && src.crossOrigin === undefined) {
+        console.log('%c 【自动获取图片】站点正在加载无法下载的图片，请自行访问该链接下载：', 'color: orange;', src);
+        return;
+      }
+      this.drawImage_.apply(this, arguments);
+    };
   }
 })();

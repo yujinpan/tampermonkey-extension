@@ -3,7 +3,7 @@
 // @namespace    https://github.com/yujinpan/tampermonkey-extension
 // @version      1.0
 // @license      MIT
-// @description  恢复右键原始的功能。
+// @description  解除右键菜单的禁用。
 // @author       yujinpan
 // @include      http*://**
 // @run-at       document-start

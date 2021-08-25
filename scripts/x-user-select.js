@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         恢复文本选择
 // @namespace    https://github.com/yujinpan/tampermonkey-extension
-// @version      1.0
+// @version      1.1
 // @license      MIT
 // @description  解除文本选择的禁用。
 // @author       yujinpan

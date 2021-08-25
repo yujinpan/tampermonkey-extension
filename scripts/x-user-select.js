@@ -12,4 +12,5 @@
 (() => {
   const style = document.createElement('style');
   style.innerHTML = '*,*::after,*::before { user-select: auto !important; }';
+  document.head.append(style);
 })();

@@ -81,7 +81,7 @@
               <option value="150">宽高大于 150</option>
               <option value="200">宽高大于 200</option>
             </select>
-            <button class="SIR-download-bat-button SIR-button">批量下载</button>
+            <button class="SIR-download-bat-button SIR-button">批量下载（部分可能失败）</button>
           </div>
           <div class="SIR-download-program"></div>
       </div>

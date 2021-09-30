@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         网站图片（背景图，svg，canvas）抓取预览下载
 // @namespace    https://github.com/yujinpan/tampermonkey-extension
-// @version      2.6
+// @version      2.7
 // @license      MIT
 // @description  将站点所有的图片（背景图，svg，canvas）抓取提供预览，直接点击下载，批量打包下载。
 // @author       yujinpan
@@ -80,6 +80,11 @@
               <option value ="100">宽高大于 100</option>
               <option value="150">宽高大于 150</option>
               <option value="200">宽高大于 200</option>
+              <option value="300">宽高大于 300</option>
+              <option value="400">宽高大于 400</option>
+              <option value="600">宽高大于 600</option>
+              <option value="800">宽高大于 800</option>
+              <option value="1000">宽高大于 1000</option>
             </select>
             <button class="SIR-download-bat-button SIR-button">批量下载（部分可能失败）</button>
           </div>

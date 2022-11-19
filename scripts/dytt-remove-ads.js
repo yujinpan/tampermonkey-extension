@@ -5,11 +5,10 @@
 // @license      MIT
 // @description  主要是在电影天堂,阳光电影网站去掉页面上的广告（隐藏广告比较烦）。还有就是标记高分和获奖的电影，方便找到精华电影。
 // @author       yujinpan
-// @include      http*://www.dytt8.net/*
-// @include      http*://www.ygdy8.com/*
-// @include      http*://www.dy2018.com/*
-// @include      http*://www.xiaopian.com/*
-// @include      http*://www.dygod.net/*
+// @match        http*://*dytt8.net/*
+// @match        http*://www.ygdy8.com/*
+// @match        http*://www.dy2018.com/*
+// @match        http*://www.xiaopian.com/*
 // ==/UserScript==
 
 /**
@@ -25,9 +24,11 @@
 
 // 功能1：删除第一次加载出现的广告
 // 功能5：删除右下角的flash广告
+// 功能8：删除所有图片广告
+// 功能9：删除【紧急通知】
 (function() {
   // 生成广告列表实例
-  var ads = new Ads(['link', 'flash']);
+  var ads = new Ads(['link', 'flash', 'img', 'notice']);
 
   // 循环搜索广告
   var adSearchCounter = 0;
@@ -53,15 +54,40 @@
       console.log('找到右下角flash窗口！成功删除！');
     }
 
+    var images = document.body.querySelectorAll('img');
+    if (images.length) {
+      Array.from(images).forEach(item => {
+        var parent = item.parentNode;
+        var grantParent = parent ? parent.parentNode : null;
+        if (parent) {
+          if (parent.tagName === 'A') parent.remove();
+          if (grantParent && grantParent.parentNode === document.body) grantParent.remove();
+        }
+        item.remove();
+        // 移除广告后是空盒子也移除掉
+        if (parent && !parent.childNodes.length) parent.remove();
+        if (grantParent && !grantParent.childNodes.length) grantParent.remove();
+      });
+      ads.remove('img');
+      console.log('找到图片广告！成功删除！');
+    }
+
+    var noticeElm = document.body.querySelector('div[class^="notice"]');
+    if (noticeElm) {
+      noticeElm.remove();
+      ads.remove('notice');
+      console.log('找到【紧急通知】！成功删除！');
+    }
+
     // 判断是否删除完毕
     if (!ads.get()) return;
 
     // 超过20次就不再查找了
-    if (adSearchCounter > 20) {
+    if (adSearchCounter > 100) {
       return console.log('未找到，寻找结束！');
     }
 
-    setTimeout(removeAd, 300);
+    setTimeout(removeAd, 50);
   })();
 
   /**

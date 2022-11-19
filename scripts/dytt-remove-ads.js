@@ -1,14 +1,18 @@
 // ==UserScript==
 // @name         电影天堂,阳光电影去掉广告与高亮高分电影
 // @namespace    https://github.com/yujinpan/tampermonkey-extension
-// @version      1.4
+// @version      1.5
 // @license      MIT
 // @description  主要是在电影天堂,阳光电影网站去掉页面上的广告（隐藏广告比较烦）。还有就是标记高分和获奖的电影，方便找到精华电影。
 // @author       yujinpan
 // @match        http*://*.dytt8.net/*
-// @match        http*://www.ygdy8.com/*
-// @match        http*://www.dy2018.com/*
-// @match        http*://www.xiaopian.com/*
+// @match        http*://dytt8.net/*
+// @match        http*://*.ygdy8.com/*
+// @match        http*://ygdy8.com/*
+// @match        http*://*.dy2018.com/*
+// @match        http*://dy2018.com/*
+// @match        http*://*.dydytt.net/*
+// @match        http*://dydytt.net/*
 // ==/UserScript==
 
 /**
@@ -59,6 +63,8 @@
     var images = document.body.querySelectorAll('img');
     if (images.length) {
       Array.from(images).forEach(item => {
+        if (item.nextSibling && item.nextSibling.tagName === 'BR') return;
+
         var parent = item.parentNode;
         var grantParent = parent ? parent.parentNode : null;
         if (parent) {

@@ -33,30 +33,25 @@
 // 功能8：删除所有图片广告
 // 功能9：删除【紧急通知】
 (function() {
-  // 生成广告列表实例
-  var ads = new Ads(['link', 'flash', 'img', 'notice']);
-
   // 循环搜索广告
   var adSearchCounter = 0;
   (function removeAd() {
     adSearchCounter++;
     console.log('第' + adSearchCounter + '次查找广告。');
 
-    var elems = document.body.children;
+    var bodyChildren = document.body.children;
 
     // 查找全屏链接广告
-    var link = elems[0];
-    if (ads.get('link') && link && link.nodeName === 'A' && link.href) {
-      link.remove();
-      ads.remove('link');
+    var links = document.querySelectorAll('body>a');
+    if (links.length) {
+      links.forEach(item => item.remove());
       console.log(`找到全屏链接广告！成功删除！`);
     }
 
     // 查找右下角flash窗口
-    var flash = elems[elems.length - 1];
-    if (ads.get('flash') && flash && flash.style.position === 'fixed') {
+    var flash = bodyChildren[bodyChildren.length - 1];
+    if (flash && flash.style.position === 'fixed') {
       flash.remove();
-      ads.remove('flash');
       console.log('找到右下角flash窗口！成功删除！');
     }
 
@@ -76,60 +71,22 @@
         if (parent && !parent.childNodes.length) parent.remove();
         if (grantParent && !grantParent.childNodes.length) grantParent.remove();
       });
-      ads.remove('img');
       console.log('找到图片广告！成功删除！');
     }
 
     var noticeElm = document.body.querySelector('div[class^="notice"]');
     if (noticeElm) {
       noticeElm.remove();
-      ads.remove('notice');
       console.log('找到【紧急通知】！成功删除！');
     }
 
-    // 判断是否删除完毕
-    if (!ads.get()) return;
-
-    // 超过20次就不再查找了
-    if (adSearchCounter > 100) {
+    // 超过 50 次就不再查找了
+    if (adSearchCounter > 50) {
       return console.log('未找到，寻找结束！');
     }
 
     setTimeout(removeAd, 50);
   })();
-
-  /**
-   * 广告列表类
-   * @param {Array} ads 广告集合 ['link', 'flash']
-   * @method remove(adName) 移除广告
-   * @method get(adName) 获取广告是否移除，默认无参数返回广告的总数量
-   */
-  function Ads(ads) {
-    var _ads = {};
-    var _adsLen = 0;
-    ads.forEach(function(ad) {
-      _ads[ad] = true;
-      _adsLen++;
-    });
-
-    return {
-      remove,
-      get
-    };
-
-    // 移除广告
-    function remove(key) {
-      if (_ads[key]) {
-        _ads[key] = false;
-        _adsLen--;
-      }
-    }
-
-    // 获取广告移除状态
-    function get(key) {
-      return key ? _ads[key] : _adsLen;
-    }
-  }
 })();
 
 // 功能2：标记高分电影

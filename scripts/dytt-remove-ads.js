@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         电影天堂,阳光电影去掉广告与高亮高分电影
 // @namespace    https://github.com/yujinpan/tampermonkey-extension
-// @version      1.5
+// @version      1.6
 // @license      MIT
 // @description  主要是在电影天堂,阳光电影网站去掉页面上的广告（隐藏广告比较烦）。还有就是标记高分和获奖的电影，方便找到精华电影。
 // @author       yujinpan
@@ -13,6 +13,7 @@
 // @match        http*://dy2018.com/*
 // @match        http*://*.dydytt.net/*
 // @match        http*://dydytt.net/*
+// @run-at       document-start
 // ==/UserScript==
 
 /**
@@ -28,16 +29,43 @@
  *  - 功能9：删除【紧急通知】
  */
 
-// 功能1：删除第一次加载出现的广告
-// 功能5：删除右下角的flash广告
-// 功能8：删除所有图片广告
-// 功能9：删除【紧急通知】
-(function() {
-  // 循环搜索广告
-  var adSearchCounter = 0;
-  (function removeAd() {
-    adSearchCounter++;
-    console.log('第' + adSearchCounter + '次查找广告。');
+class ImgControl {
+  static style;
+
+  static hide() {
+    ImgControl.style = document.createElement('style');
+    ImgControl.style.innerHTML = 'img {display: none!important}';
+    document.head.prepend(ImgControl.style);
+  }
+
+  static show() {
+    ImgControl.style && ImgControl.style.remove();
+  }
+}
+
+start();
+
+function start() {
+  ImgControl.hide();
+  document.addEventListener('DOMContentLoaded', function () {
+    removeFirst();
+    removeKeyboardAD();
+    removeFlash();
+    markHighGrade();
+    removeImages().then(function () {
+      ImgControl.show();
+    });
+  });
+}
+
+// 删除第一次加载出现的广告
+// 删除右下角的flash广告
+// 删除所有图片广告
+// 删除【紧急通知】
+function removeImages() {
+  return new Promise(resolve => {
+    removeImages.counter = (removeImages.counter || 0) + 1;
+    console.log('第' + removeImages.counter + '次查找广告。');
 
     var bodyChildren = document.body.children;
 
@@ -81,49 +109,37 @@
     }
 
     // 超过 50 次就不再查找了
-    if (adSearchCounter > 50) {
-      return console.log('未找到，寻找结束！');
+    if (removeImages.counter > 50) {
+      return resolve();
+    } else {
+      setTimeout(() => {
+        resolve(removeImages());
+      });
     }
+  });
+}
 
-    setTimeout(removeAd, 50);
-  })();
-})();
-
-// 功能2：标记高分电影
-(function() {
+// 标记高分电影
+function markHighGrade() {
   var markWords = ['高分', '获奖'];
   var allText = document.querySelectorAll('a, p');
-  var textMark = function(text, markWords) {
-    markWords.forEach(function(word) {
-      text = text.replace(
-        new RegExp(word),
-        '<strong style="color: red;font-size: 18px;">' + word + '</strong>'
-      );
+  var textMark = function (text, markWords) {
+    markWords.forEach(function (word) {
+      text = text.replace(new RegExp(word), '<strong style="color: red;font-size: 18px;">' + word + '</strong>');
     });
     return text;
   };
-  allText.forEach(function(aElem) {
+  allText.forEach(function (aElem) {
     aElem.innerHTML = textMark(aElem.innerHTML, markWords);
   });
-})();
+}
 
-// 功能3：去掉搜索框的广告跳转
-// ** 该功能目前与功能6有重合部分，先去掉 **
-// (function() {
-//   document
-//     .querySelector('input[name="keyword"]')
-//     .addEventListener('keydown', function(e) {
-//       e.stopPropagation();
-//     });
-// })();
-
-// 功能4：去掉中间页面上的flash广告
-// (还可以提高网站性能，不影响页面布局)
-(function() {
+// 去掉中间页面上的flash广告
+function removeFlash() {
   var containWidth = document.querySelector('.contain').clientWidth;
   // 递归移除父级，除与广告的尺寸不一致就停止
   // 误差范围宽度30px，高度10px
-  var removeParentUntilDiffSize = function(elem) {
+  var removeParentUntilDiffSize = function (elem) {
     var elemW = elem.clientWidth;
     var elemH = elem.clientHeight;
     var parent = elem.parentNode;
@@ -136,36 +152,28 @@
     }
   };
   // 校验大小是否在误差之内
-  var checkSize = function(current, target, range) {
+  var checkSize = function (current, target, range) {
     return current > target - 30 && current < target + 30;
   };
-  document.querySelectorAll('iframe').forEach(function(elem) {
+  document.querySelectorAll('iframe').forEach(function (elem) {
     if (elem.clientWidth === containWidth) {
       removeParentUntilDiffSize(elem);
     } else {
       elem.src = '';
     }
   });
-})();
+}
 
-// 功能6：去掉按任意键弹出广告
-(function() {
-  document.addEventListener(
-    'keydown',
-    function(e) {
-      e.stopPropagation();
-    },
-    true
-  );
-})();
+// 去掉按任意键弹出广告
+function removeKeyboardAD() {
+  document.addEventListener('keydown', function (e) {
+    e.stopPropagation();
+  }, true);
+}
 
-// 功能7：去掉首次点击任何地方弹出广告
-(function() {
-  document.addEventListener(
-    'click',
-    function(e) {
-      e.stopPropagation();
-    },
-    true
-  );
-})();
+// 去掉首次点击任何地方弹出广告
+function removeFirst() {
+  document.addEventListener('click', function (e) {
+    e.stopPropagation();
+  }, true);
+}

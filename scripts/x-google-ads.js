@@ -29,7 +29,7 @@
   `;
   document.head.prepend(script);
 
-  // 2. remove exist ads first
+  // 2. remove exist ads
   const style = document.createElement('style');
   style.innerHTML = '* [data-ad-client] {display: none !important}';
   document.head.append(style);
@@ -45,7 +45,6 @@
             node.src.includes('ads')
           ) {
             node.remove();
-            console.log(node);
           }
         });
       }

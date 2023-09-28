@@ -11,6 +11,6 @@
 
 (function () {
   const style = document.createElement('style');
-  style.innerHTML = 'img{display:none!important;}*{background-image:none!important;}';
+  style.innerHTML = 'img,video{display:none!important;}*{background-image:none!important;}';
   document.head.append(style);
 })();

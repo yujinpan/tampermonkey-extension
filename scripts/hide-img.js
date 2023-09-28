@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Hide Image 隐藏图片
 // @namespace    https://github.com/yujinpan/tampermonkey-extension
-// @version      1.0
+// @version      1.1
 // @license      MIT
 // @description  Hide all image in website。
 // @author       yujinpan

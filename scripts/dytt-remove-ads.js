@@ -27,6 +27,7 @@
  *  - 功能7：去掉首次点击任何地方弹出广告
  *  - 功能8：删除所有图片广告
  *  - 功能9：删除【紧急通知】
+ *  - 功能10：移除附加内容（跳转/广告）
  */
 
 class ImgControl {
@@ -46,6 +47,8 @@ class ImgControl {
 start();
 
 function start() {
+  removeWrite();
+
   ImgControl.hide();
   document.addEventListener('DOMContentLoaded', function () {
     removeFirst();
@@ -176,4 +179,10 @@ function removeFirst() {
   document.addEventListener('click', function (e) {
     e.stopPropagation();
   }, true);
+}
+
+// 移除附加内容（跳转/广告）
+function removeWrite() {
+  document.write = () => {};
+  document.writeln = () => {};
 }
